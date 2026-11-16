@@ -1,0 +1,8 @@
+node_modules
+dist
+dev-dist
+*.local
+.vite
+coverage
+# Personal spreadsheet: keep out of the repo
+*.xlsx
