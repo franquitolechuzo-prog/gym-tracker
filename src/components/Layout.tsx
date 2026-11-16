@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { Link, NavLink, Outlet } from 'react-router';
-import { BookIcon, ChartIcon, DumbbellIcon, GearIcon, ListIcon } from './icons';
+import { Link, NavLink, Outlet, useNavigate } from 'react-router';
+import { BackIcon, BookIcon, ChartIcon, DumbbellIcon, GearIcon, ListIcon } from './icons';
 
 const TABS = [
   { to: '/', label: 'Entrenar', Icon: DumbbellIcon, end: true },
@@ -42,20 +42,45 @@ export function Layout() {
   );
 }
 
-/** Page header with title and a shortcut to Settings. */
-export function PageHeader({ title, action }: { title: string; action?: ReactNode }) {
+/** Page header with title, optional back button and a shortcut to Settings. */
+export function PageHeader({
+  title,
+  action,
+  back = false,
+  showSettings = !back,
+}: {
+  title: string;
+  action?: ReactNode;
+  back?: boolean;
+  showSettings?: boolean;
+}) {
+  const navigate = useNavigate();
   return (
-    <header className="sticky top-0 z-10 flex items-center justify-between gap-2 border-b border-neutral-900 bg-neutral-950/95 px-4 pt-[env(safe-area-inset-top)] backdrop-blur">
-      <h1 className="py-4 text-2xl font-bold">{title}</h1>
-      <div className="flex items-center gap-1">
+    <header
+      className={`sticky top-0 z-10 flex items-center justify-between gap-2 border-b border-neutral-900 bg-neutral-950/95 pt-[env(safe-area-inset-top)] backdrop-blur ${back ? 'pr-4 pl-1' : 'px-4'}`}
+    >
+      <div className="flex min-w-0 items-center">
+        {back && (
+          <button
+            type="button"
+            aria-label="Volver"
+            onClick={() => navigate(-1)}
+            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-neutral-300 active:bg-neutral-800"
+          >
+            <BackIcon />
+          </button>
+        )}
+        <h1 className={`truncate py-4 font-bold ${back ? 'text-xl' : 'text-2xl'}`}>{title}</h1>
+      </div>
+      <div className="flex shrink-0 items-center gap-1">
         {action}
-        <Link
+        {showSettings && <Link
           to="/ajustes"
           aria-label="Ajustes"
           className="flex h-12 w-12 items-center justify-center rounded-full text-neutral-400 active:bg-neutral-800"
         >
           <GearIcon />
-        </Link>
+        </Link>}
       </div>
     </header>
   );

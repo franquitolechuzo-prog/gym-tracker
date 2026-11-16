@@ -1,56 +1,58 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { PageHeader } from '../components/Layout';
+import { GroupedExercises, SearchBox } from '../components/ExerciseList';
+import { ChevronIcon, PlusIcon } from '../components/icons';
 import { db } from '../db/db';
-import { MUSCLE_GROUPS } from '../db/types';
-import { matchesSearch } from '../lib/format';
 
 export function ExercisesPage() {
   const [query, setQuery] = useState('');
-  const exercises = useLiveQuery(() => db.exercises.filter((e) => !e.archived).toArray(), []);
-
-  const visible = (exercises ?? [])
-    .filter((e) => matchesSearch(e.name, query))
-    .sort((a, b) => a.name.localeCompare(b.name, 'es'));
+  const [showArchived, setShowArchived] = useState(false);
+  const all = useLiveQuery(() => db.exercises.toArray(), []);
+  const archivedCount = all?.filter((e) => e.archived).length ?? 0;
+  const exercises = (all ?? []).filter((e) => e.archived === showArchived);
 
   return (
     <>
-      <PageHeader title="Ejercicios" />
-      <div className="p-4">
-        <label className="sr-only" htmlFor="exercise-search">
-          Buscar ejercicio
-        </label>
-        <input
-          id="exercise-search"
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Buscar…"
-          className="h-12 w-full rounded-xl border border-neutral-800 bg-neutral-900 px-4 text-base outline-none focus:border-accent"
+      <PageHeader
+        title={showArchived ? 'Archivados' : 'Ejercicios'}
+        action={
+          <Link
+            to="/ejercicios/nuevo"
+            aria-label="Nuevo ejercicio"
+            className="flex h-12 w-12 items-center justify-center rounded-full text-accent active:bg-neutral-800"
+          >
+            <PlusIcon />
+          </Link>
+        }
+      />
+      <SearchBox value={query} onChange={setQuery} />
+      {all && (
+        <GroupedExercises
+          exercises={exercises}
+          query={query}
+          empty={showArchived ? 'No hay ejercicios archivados.' : 'No se encontraron ejercicios.'}
+          renderRow={(e) => (
+            <Link to={`/ejercicios/${e.id}`} className="flex min-h-14 items-center gap-3 px-4 active:bg-neutral-900">
+              <span className="flex-1">{e.name}</span>
+              {e.equipment && <span className="text-sm text-neutral-500">{e.equipment}</span>}
+              <ChevronIcon className="text-neutral-600" />
+            </Link>
+          )}
         />
-      </div>
-      {MUSCLE_GROUPS.map((group) => {
-        const items = visible.filter((e) => e.muscleGroup === group);
-        if (items.length === 0) return null;
-        return (
-          <section key={group} aria-labelledby={`group-${group}`}>
-            <h2
-              id={`group-${group}`}
-              className="bg-neutral-900/60 px-4 py-2 text-sm font-semibold tracking-wide text-neutral-400 uppercase"
-            >
-              {group}
-            </h2>
-            <ul className="divide-y divide-neutral-900">
-              {items.map((e) => (
-                <li key={e.id} className="flex min-h-14 items-center justify-between px-4">
-                  <span>{e.name}</span>
-                  {e.equipment && <span className="text-sm text-neutral-500">{e.equipment}</span>}
-                </li>
-              ))}
-            </ul>
-          </section>
-        );
-      })}
+      )}
+      {(archivedCount > 0 || showArchived) && (
+        <div className="p-4">
+          <button
+            type="button"
+            onClick={() => setShowArchived((v) => !v)}
+            className="min-h-12 w-full rounded-xl text-neutral-400 active:bg-neutral-900"
+          >
+            {showArchived ? 'Volver a los ejercicios activos' : `Ver archivados (${archivedCount})`}
+          </button>
+        </div>
+      )}
     </>
   );
 }

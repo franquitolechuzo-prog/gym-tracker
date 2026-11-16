@@ -38,7 +38,37 @@ export const ChartIcon = (p: IconProps) => (
   </svg>
 );
 
-export const GearIcon = (p: IconProps) => (
+export const GripIcon = (p: IconProps) => (
+  <svg {...base} width={22} height={22} {...p}>
+    <path d="M9 6h.01M15 6h.01M9 12h.01M15 12h.01M9 18h.01M15 18h.01" strokeWidth={3} />
+  </svg>
+);
+
+export const PlusIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M12 5v14M5 12h14" />
+  </svg>
+);
+
+export const BackIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M15 18l-6-6 6-6" />
+  </svg>
+);
+
+export const ChevronIcon = (p: IconProps) => (
+  <svg {...base} width={20} height={20} {...p}>
+    <path d="M9 18l6-6-6-6" />
+  </svg>
+);
+
+export const CheckIcon = (p: IconProps) => (
+  <svg {...base} {...p}>
+    <path d="M20 6L9 17l-5-5" />
+  </svg>
+);
+
+export const GearIcon =(p: IconProps) => (
   <svg {...base} {...p}>
     <circle cx="12" cy="12" r="3" />
     <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" />
