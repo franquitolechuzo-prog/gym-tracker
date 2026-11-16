@@ -82,7 +82,7 @@ export function SessionView({ session, onFinished }: { session: Session; onFinis
       <PageHeader
         title={title}
         action={
-          <Button variant="primary" className="min-h-11 px-3" onClick={onFinish}>
+          <Button variant="primary" className="px-3" onClick={onFinish}>
             Terminar
           </Button>
         }

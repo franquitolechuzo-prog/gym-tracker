@@ -187,7 +187,7 @@ export function SettingsPage() {
           </Button>
         </Section>
 
-        <p className="text-center text-xs text-neutral-600">Gym Tracker · versión {__APP_VERSION__}</p>
+        <p className="text-center text-xs text-neutral-500">Gym Tracker · versión {__APP_VERSION__}</p>
       </div>
     </>
   );

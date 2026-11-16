@@ -45,7 +45,6 @@ export function formatRelativeDay(date: string, today: Date = new Date()): strin
 }
 
 const longDate = new Intl.DateTimeFormat('es-AR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-const shortDate = new Intl.DateTimeFormat('es-AR', { day: '2-digit', month: '2-digit' });
 
 function parseLocalDate(date: string): Date {
   const [y, m, d] = date.split('-').map(Number);
@@ -57,9 +56,10 @@ export function formatLongDate(date: string): string {
   return longDate.format(parseLocalDate(date));
 }
 
-/** "12/11". */
+/** "12/11", "3/11" (built by hand: ICU data for es-AR differs between engines). */
 export function formatShortDate(date: string): string {
-  return shortDate.format(parseLocalDate(date));
+  const [, m, d] = date.split('-').map(Number);
+  return `${d}/${m}`;
 }
 
 /** Local calendar date as 'YYYY-MM-DD'. */

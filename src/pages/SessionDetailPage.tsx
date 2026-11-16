@@ -146,7 +146,7 @@ function PastExerciseCard({ item }: { item: SessionExercise }) {
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           onBlur={() => updateSessionExerciseNotes(item.id, notes)}
-          className="h-11 w-full rounded-xl border border-neutral-800 bg-neutral-950 px-3 text-base outline-none focus:border-accent"
+          className="h-12 w-full rounded-xl border border-neutral-800 bg-neutral-950 px-3 text-base outline-none focus:border-accent"
         />
       </div>
       <div className="mt-2 grid grid-cols-2 gap-2 px-3 text-xs font-semibold tracking-wide text-neutral-500 uppercase">

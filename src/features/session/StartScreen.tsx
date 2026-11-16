@@ -44,7 +44,7 @@ export function StartScreen({ banner, onDismissBanner }: { banner?: string; onDi
         {banner && (
           <div role="status" className="flex items-center justify-between gap-3 rounded-xl bg-lime-950/70 p-4 text-lime-100">
             <span>{banner}</span>
-            <button type="button" onClick={onDismissBanner} aria-label="Cerrar aviso" className="h-10 w-10 shrink-0 rounded-full">
+            <button type="button" onClick={onDismissBanner} aria-label="Cerrar aviso" className="h-12 w-12 shrink-0 rounded-full">
               ✕
             </button>
           </div>

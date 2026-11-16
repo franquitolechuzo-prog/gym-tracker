@@ -67,8 +67,22 @@ export function SortableList<T extends { id: string }>({
     void onReorder(next);
   };
 
+  const position = (id: string | number | undefined) => display.findIndex((i) => i.id === id) + 1;
+  const accessibility = {
+    screenReaderInstructions: {
+      draggable:
+        'Para reordenar, presioná espacio o Enter para levantar el elemento, movelo con las flechas arriba y abajo, y presioná espacio o Enter para soltarlo. Escape cancela.',
+    },
+    announcements: {
+      onDragStart: ({ active }: { active: { id: string | number } }) => `Elemento levantado, en la posición ${position(active.id)} de ${display.length}.`,
+      onDragOver: ({ over }: { over: { id: string | number } | null }) => (over ? `Ahora en la posición ${position(over.id)} de ${display.length}.` : 'Fuera de la lista.'),
+      onDragEnd: ({ over }: { over: { id: string | number } | null }) => (over ? `Elemento soltado en la posición ${position(over.id)}.` : 'Elemento soltado.'),
+      onDragCancel: () => 'Reordenamiento cancelado.',
+    },
+  };
+
   return (
-    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd} accessibility={accessibility}>
       <SortableContext items={display.map((i) => i.id)} strategy={verticalListSortingStrategy}>
         <ul className={className}>
           {display.map((item) => (
@@ -91,7 +105,7 @@ function SortableRow({ id, children }: { id: string; children: (handle: ReactNod
       {...attributes}
       {...listeners}
       aria-label="Arrastrar para reordenar"
-      className="flex h-12 w-10 shrink-0 cursor-grab touch-none items-center justify-center text-neutral-500 active:text-neutral-200"
+      className="flex h-12 w-12 shrink-0 cursor-grab touch-none items-center justify-center text-neutral-500 active:text-neutral-200"
     >
       <GripIcon />
     </button>

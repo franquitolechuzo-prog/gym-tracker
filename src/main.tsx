@@ -1,14 +1,13 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HashRouter } from 'react-router';
-import { registerSW } from 'virtual:pwa-register';
 import App from './App';
 import { db } from './db/db';
 import { ensureSeeded } from './db/seed';
 import { requestPersistentStorage } from './lib/storage';
 import './index.css';
 
-registerSW({ immediate: true });
+// The service worker is registered by <UpdatePrompt /> (it asks before applying updates).
 // Ask the browser not to evict local data (granted automatically for installed PWAs on Chrome).
 void requestPersistentStorage();
 

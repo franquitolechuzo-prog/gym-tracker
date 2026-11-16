@@ -1,5 +1,6 @@
-import { useEffect, useId, useState, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { formatWeight, parseDecimal } from '../lib/format';
+import { useDialogFocus } from './useDialogFocus';
 
 type Variant = 'primary' | 'secondary' | 'danger' | 'ghost';
 
@@ -110,7 +111,7 @@ export function Segmented<T extends string>({
           role="radio"
           aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
-          className={`min-h-11 rounded-lg px-3 font-semibold ${value === o.value ? 'bg-neutral-700 text-white' : 'text-neutral-400'}`}
+          className={`min-h-12 rounded-lg px-3 font-semibold ${value === o.value ? 'bg-neutral-700 text-white' : 'text-neutral-400'}`}
         >
           {o.label}
         </button>
@@ -228,16 +229,16 @@ export function NumberStepper({
 
 /** Full-screen sheet on mobile, used for pickers. */
 export function Sheet({ title, onClose, children, footer }: { title: string; onClose: () => void; children: ReactNode; footer?: ReactNode }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  const ref = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+  useDialogFocus(ref, onClose);
 
   return (
-    <div role="dialog" aria-modal="true" aria-label={title} className="fixed inset-0 z-40 flex flex-col bg-neutral-950">
+    <div ref={ref} role="dialog" aria-modal="true" aria-labelledby={titleId} className="fixed inset-0 z-40 flex flex-col bg-neutral-950">
       <header className="flex items-center justify-between border-b border-neutral-900 px-2 pt-[env(safe-area-inset-top)]">
-        <h2 className="px-2 py-4 text-xl font-bold">{title}</h2>
+        <h2 id={titleId} className="px-2 py-4 text-xl font-bold">
+          {title}
+        </h2>
         <IconButton label="Cerrar" onClick={onClose}>
           <span aria-hidden className="text-2xl">✕</span>
         </IconButton>

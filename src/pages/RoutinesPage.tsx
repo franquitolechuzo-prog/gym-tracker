@@ -70,7 +70,7 @@ export function RoutinesPage() {
         />
       )}
       {routines && routines.length > 1 && (
-        <p className="px-4 py-3 text-center text-sm text-neutral-600">Arrastrá ⋮⋮ para cambiar el orden.</p>
+        <p className="px-4 py-3 text-center text-sm text-neutral-500">Arrastrá ⋮⋮ para cambiar el orden.</p>
       )}
     </>
   );

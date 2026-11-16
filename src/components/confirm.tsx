@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useRef, useState, type ReactNode } from 'react';
 import { Button } from './ui';
+import { useDialogFocus } from './useDialogFocus';
 
 export interface ConfirmOptions {
   title: string;
@@ -35,28 +36,43 @@ export function ConfirmProvider({ children }: { children: ReactNode }) {
     <ConfirmContext.Provider value={confirm}>
       {children}
       {opts && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-4 sm:items-center" onClick={() => close(false)}>
-          <div
-            role="alertdialog"
-            aria-modal="true"
-            aria-labelledby="confirm-title"
-            className="w-full max-w-md rounded-2xl bg-neutral-900 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 id="confirm-title" className="text-lg font-bold">
-              {opts.title}
-            </h2>
-            {opts.message && <div className="mt-2 text-neutral-400">{opts.message}</div>}
-            <div className="mt-5 grid grid-cols-2 gap-2">
-              <Button onClick={() => close(false)}>{opts.cancelLabel ?? 'Cancelar'}</Button>
-              <Button variant={opts.danger ? 'danger' : 'primary'} onClick={() => close(true)} autoFocus>
-                {opts.confirmLabel ?? 'Aceptar'}
-              </Button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog opts={opts} onResult={close} />
       )}
     </ConfirmContext.Provider>
+  );
+}
+
+function ConfirmDialog({ opts, onResult }: { opts: ConfirmOptions; onResult: (ok: boolean) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  // Focus lands on "Cancelar" first: the safe choice for destructive actions. Escape cancels.
+  useDialogFocus(ref, () => onResult(false));
+  return (
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-4 sm:items-center" onClick={() => onResult(false)}>
+      <div
+        ref={ref}
+        role="alertdialog"
+        aria-modal="true"
+        aria-labelledby="confirm-title"
+        aria-describedby={opts.message ? 'confirm-message' : undefined}
+        className="w-full max-w-md rounded-2xl bg-neutral-900 p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2 id="confirm-title" className="text-lg font-bold">
+          {opts.title}
+        </h2>
+        {opts.message && (
+          <div id="confirm-message" className="mt-2 text-neutral-400">
+            {opts.message}
+          </div>
+        )}
+        <div className="mt-5 grid grid-cols-2 gap-2">
+          <Button onClick={() => onResult(false)}>{opts.cancelLabel ?? 'Cancelar'}</Button>
+          <Button variant={opts.danger ? 'danger' : 'primary'} onClick={() => onResult(true)}>
+            {opts.confirmLabel ?? 'Aceptar'}
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
 
