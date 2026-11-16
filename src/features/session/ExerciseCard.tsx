@@ -17,6 +17,7 @@ import {
 } from '../../db/sessions';
 import { useSettings } from '../../db/settings';
 import { alignWithPrevious, compareToPrevious, computeRecords, detectPRs, formatSet, mergeRecords, type PRKind } from '../../lib/progress';
+import { suggestProgression } from '../../lib/stats';
 import { startRest } from './restTimer';
 import { SetRow } from './SetRow';
 
@@ -107,6 +108,12 @@ export function ExerciseCard({
     }`;
   const doneCount = sets.filter((s) => s.done).length;
 
+  // Progressive overload: offer to raise the pending working sets by one increment.
+  const suggestion = suggestProgression(previous, target ?? undefined, settings.weightIncrement);
+  const belowSuggestion = suggestion ? sets.filter((s) => !s.done && !s.isWarmup && s.weight < suggestion.weight) : [];
+  const applySuggestion = () =>
+    db.transaction('rw', db.sets, () => Promise.all(belowSuggestion.map((s) => updateSet(s.id, { weight: suggestion!.weight }))));
+
   return (
     <section aria-labelledby={`se-${item.id}`} className="overflow-hidden rounded-2xl bg-neutral-900">
       <header className="flex items-start gap-2 px-3 pt-3">
@@ -141,6 +148,20 @@ export function ExerciseCard({
           </Button>
           <Button variant="danger" className="col-span-2" onClick={onRemove}>
             Quitar ejercicio
+          </Button>
+        </div>
+      )}
+
+      {suggestion && belowSuggestion.length > 0 && (
+        <div className="mx-3 mt-2 flex items-center gap-3 rounded-xl bg-sky-950/70 p-3 text-sky-100">
+          <span className="min-w-0 flex-1 text-sm">
+            <span className="block font-semibold">
+              💡 Probá con {formatSet(suggestion.weight, 0, exercise.unit, exercise.isBodyweight).replace(/ × 0$/, '')}
+            </span>
+            <span className="block text-sky-200/80">{suggestion.reason}.</span>
+          </span>
+          <Button variant="secondary" className="shrink-0" onClick={applySuggestion}>
+            Aplicar
           </Button>
         </div>
       )}

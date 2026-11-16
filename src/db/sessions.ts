@@ -165,8 +165,8 @@ export async function moveSessionExercise(sessionExerciseId: string, dir: -1 | 1
   });
 }
 
-/** Adds a set copying the last one (not done). */
-export async function addSet(sessionExerciseId: string, database: GymDB = db): Promise<SetEntry> {
+/** Adds a set copying the last one. Sets added to past sessions pass `done: true`. */
+export async function addSet(sessionExerciseId: string, { done = false }: { done?: boolean } = {}, database: GymDB = db): Promise<SetEntry> {
   return database.transaction('rw', database.sets, async () => {
     const sets = await listSets(sessionExerciseId, database);
     const last = sets.at(-1);
@@ -177,7 +177,7 @@ export async function addSet(sessionExerciseId: string, database: GymDB = db): P
       weight: last?.weight ?? 0,
       reps: last?.reps ?? 0,
       isWarmup: false,
-      done: false,
+      done,
     };
     await database.sets.add(set);
     return set;

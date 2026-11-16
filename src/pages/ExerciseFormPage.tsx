@@ -93,8 +93,10 @@ export function ExerciseFormPage() {
           },
     );
     if (!ok) return;
-    await deleteOrArchiveExercise(id);
-    navigate(-1);
+    const result = await deleteOrArchiveExercise(id);
+    // A deleted exercise's detail page no longer exists, so go to the list instead of back.
+    if (result === 'deleted') navigate('/ejercicios', { replace: true });
+    else navigate(-1);
   };
 
   const onRestore = async () => {

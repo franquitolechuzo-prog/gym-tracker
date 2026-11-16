@@ -44,6 +44,24 @@ export function formatRelativeDay(date: string, today: Date = new Date()): strin
   return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
 }
 
+const longDate = new Intl.DateTimeFormat('es-AR', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+const shortDate = new Intl.DateTimeFormat('es-AR', { day: '2-digit', month: '2-digit' });
+
+function parseLocalDate(date: string): Date {
+  const [y, m, d] = date.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+/** "mié, 12 nov 2025". */
+export function formatLongDate(date: string): string {
+  return longDate.format(parseLocalDate(date));
+}
+
+/** "12/11". */
+export function formatShortDate(date: string): string {
+  return shortDate.format(parseLocalDate(date));
+}
+
 /** Local calendar date as 'YYYY-MM-DD'. */
 export function toLocalDateString(d: Date = new Date()): string {
   const y = d.getFullYear();

@@ -102,7 +102,7 @@ describe('sessions', () => {
     let sets = await listSets(se.id, d);
     expect(sets).toHaveLength(3);
     await updateSet(sets[2].id, { weight: 60, reps: 8 }, d);
-    const added = await addSet(se.id, d);
+    const added = await addSet(se.id, {}, d);
     expect(added).toMatchObject({ setNumber: 4, weight: 60, reps: 8, done: false });
     await removeSet(sets[0].id, d);
     sets = await listSets(se.id, d);

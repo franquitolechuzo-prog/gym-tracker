@@ -13,6 +13,7 @@ export function SetRow({
   prs,
   weightStep,
   onToggleDone,
+  info,
 }: {
   set: SetEntry;
   exercise: Exercise;
@@ -20,14 +21,17 @@ export function SetRow({
   comparison?: Comparison;
   prs: PRKind[];
   weightStep: number;
-  onToggleDone: () => void;
+  /** Omit to hide the ✓ button (editing past sessions). */
+  onToggleDone?: () => void;
+  /** Replaces the "Anterior" line. */
+  info?: string;
 }) {
   const [menu, setMenu] = useState(false);
   const label = set.isWarmup ? 'C' : String(set.setNumber);
   const name = `serie ${set.setNumber}`;
 
   return (
-    <li className={`px-3 py-2 ${set.done ? 'bg-lime-950/40' : ''}`}>
+    <li className={`px-3 py-2 ${set.done && onToggleDone ? 'bg-lime-950/40' : ''}`}>
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -42,7 +46,10 @@ export function SetRow({
         </button>
         <div className="min-w-0 flex-1 text-sm leading-tight">
           <div className="truncate text-neutral-400">
-            {previous ? `Anterior: ${formatSet(previous.weight, previous.reps, exercise.unit, exercise.isBodyweight)}` : 'Sin registro anterior'}
+            {info ??
+              (previous
+                ? `Anterior: ${formatSet(previous.weight, previous.reps, exercise.unit, exercise.isBodyweight)}`
+                : 'Sin registro anterior')}
           </div>
           <div className="flex flex-wrap gap-x-2 font-semibold">
             {comparison === 'better' && <span className="text-accent">▲ Superaste la anterior</span>}
@@ -50,17 +57,19 @@ export function SetRow({
             {prs.length > 0 && <span className="text-amber-300">🏆 Récord</span>}
           </div>
         </div>
-        <button
-          type="button"
-          onClick={onToggleDone}
-          aria-pressed={!!set.done}
-          aria-label={set.done ? `Desmarcar ${name}` : `Marcar ${name} como hecha`}
-          className={`flex h-12 w-14 shrink-0 items-center justify-center rounded-xl ${
-            set.done ? 'bg-accent text-neutral-950' : 'border-2 border-neutral-700 text-neutral-500'
-          }`}
-        >
-          <CheckIcon strokeWidth={3} />
-        </button>
+        {onToggleDone && (
+          <button
+            type="button"
+            onClick={onToggleDone}
+            aria-pressed={!!set.done}
+            aria-label={set.done ? `Desmarcar ${name}` : `Marcar ${name} como hecha`}
+            className={`flex h-12 w-14 shrink-0 items-center justify-center rounded-xl ${
+              set.done ? 'bg-accent text-neutral-950' : 'border-2 border-neutral-700 text-neutral-500'
+            }`}
+          >
+            <CheckIcon strokeWidth={3} />
+          </button>
+        )}
       </div>
       <div className="mt-2 grid grid-cols-2 gap-2">
         <NumberStepper
