@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatWeight, matchesSearch, normalizeText, parseDecimal, toLocalDateString } from './format';
+import { formatRelativeDay, formatWeight, matchesSearch, normalizeText, parseDecimal, toLocalDateString } from './format';
 
 describe('parseDecimal', () => {
   it.each([
@@ -42,6 +42,18 @@ describe('search', () => {
     expect(matchesSearch('Jalón al pecho', 'JALON')).toBe(true);
     expect(matchesSearch('Press plano', 'press inclinado')).toBe(false);
     expect(matchesSearch('Press plano', '   ')).toBe(true);
+  });
+});
+
+describe('formatRelativeDay', () => {
+  const today = new Date(2025, 10, 12, 20, 0);
+  it.each([
+    ['2025-11-12', 'hoy'],
+    ['2025-11-11', 'ayer'],
+    ['2025-11-05', 'hace 7 días'],
+    ['2025-09-01', '01/09/2025'],
+  ])('%s → %s', (date, expected) => {
+    expect(formatRelativeDay(date, today)).toBe(expected);
   });
 });
 

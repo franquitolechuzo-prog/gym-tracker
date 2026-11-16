@@ -134,6 +134,7 @@ export function NumberStepper({
   optional = false,
   suffix,
   compact = false,
+  hideLabel = false,
 }: {
   label: string;
   value: number | undefined;
@@ -145,6 +146,7 @@ export function NumberStepper({
   optional?: boolean;
   suffix?: string;
   compact?: boolean;
+  hideLabel?: boolean;
 }) {
   const id = useId();
   const show = (v: number | undefined) => (v === undefined ? '' : decimal ? formatWeight(v) : String(v));
@@ -181,7 +183,7 @@ export function NumberStepper({
   const h = compact ? 'h-12' : 'h-14';
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-neutral-400">
+      <label htmlFor={id} className={hideLabel ? 'sr-only' : 'text-sm font-medium text-neutral-400'}>
         {label}
       </label>
       <div className="flex items-stretch gap-1">

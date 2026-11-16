@@ -32,6 +32,18 @@ export function matchesSearch(text: string, query: string): boolean {
     .every((term) => haystack.includes(term));
 }
 
+/** "hoy", "ayer", "hace 3 días", or "12/11/2025" beyond a month. */
+export function formatRelativeDay(date: string, today: Date = new Date()): string {
+  const [y, m, d] = date.split('-').map(Number);
+  const then = new Date(y, m - 1, d);
+  const base = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const days = Math.round((base.getTime() - then.getTime()) / 86_400_000);
+  if (days === 0) return 'hoy';
+  if (days === 1) return 'ayer';
+  if (days > 1 && days <= 30) return `hace ${days} días`;
+  return `${String(d).padStart(2, '0')}/${String(m).padStart(2, '0')}/${y}`;
+}
+
 /** Local calendar date as 'YYYY-MM-DD'. */
 export function toLocalDateString(d: Date = new Date()): string {
   const y = d.getFullYear();

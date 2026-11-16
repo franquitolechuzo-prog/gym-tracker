@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router';
 import { BackIcon, BookIcon, ChartIcon, DumbbellIcon, GearIcon, ListIcon } from './icons';
+import { RestTimerBar } from '../features/session/RestTimerBar';
 
 const TABS = [
   { to: '/', label: 'Entrenar', Icon: DumbbellIcon, end: true },
@@ -15,6 +16,7 @@ export function Layout() {
       <main className="flex-1 overflow-y-auto pb-[calc(5rem+env(safe-area-inset-bottom))]">
         <Outlet />
       </main>
+      <RestTimerBar />
       <nav
         aria-label="Navegación principal"
         className="fixed inset-x-0 bottom-0 z-20 border-t border-neutral-800 bg-neutral-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
