@@ -5,9 +5,12 @@ import { registerSW } from 'virtual:pwa-register';
 import App from './App';
 import { db } from './db/db';
 import { ensureSeeded } from './db/seed';
+import { requestPersistentStorage } from './lib/storage';
 import './index.css';
 
 registerSW({ immediate: true });
+// Ask the browser not to evict local data (granted automatically for installed PWAs on Chrome).
+void requestPersistentStorage();
 
 // Seed before first render so screens never flash empty on first launch.
 ensureSeeded(db)

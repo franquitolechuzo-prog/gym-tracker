@@ -7,6 +7,9 @@ import { VitePWA } from 'vite-plugin-pwa';
 // Relative base so the same build works on GitHub Pages (sub-path) and locally.
 export default defineConfig({
   base: './',
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version ?? 'dev'),
+  },
   plugins: [
     react(),
     tailwindcss(),

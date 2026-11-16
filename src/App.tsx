@@ -13,6 +13,7 @@ import { SessionDetailPage } from './pages/SessionDetailPage';
 // Charts (Recharts) are heavy: load the exercise detail screen on demand. The service worker precaches it for offline use.
 const ExerciseDetailPage = lazy(() => import('./pages/ExerciseDetailPage').then((m) => ({ default: m.ExerciseDetailPage })));
 import { SettingsPage } from './pages/SettingsPage';
+import { ImportSheetPage } from './pages/ImportSheetPage';
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="progreso/sesion/:id" element={<SessionDetailPage />} />
           <Route path="progreso/ejercicio/:id" element={<ExerciseDetailPage />} />
           <Route path="ajustes" element={<SettingsPage />} />
+          <Route path="ajustes/importar-planilla" element={<ImportSheetPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
