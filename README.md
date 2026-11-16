@@ -4,6 +4,11 @@ App web progresiva (PWA) para registrar entrenamientos de gimnasio desde el celu
 de la sesión anterior precargados, temporizador de descanso, historial, gráficos de progreso y récords.
 Funciona 100 % offline y guarda todo en el dispositivo (IndexedDB); no tiene backend ni login.
 
+**App publicada:** https://franquitolechuzo-prog.github.io/gym-tracker/
+
+Cada push a `main` corre los tests, compila y publica automáticamente en GitHub Pages
+(`.github/workflows/deploy.yml`).
+
 ## Usarla en el celular
 
 1. Abrí la URL publicada en **Chrome** (Android) o **Safari** (iPhone).
